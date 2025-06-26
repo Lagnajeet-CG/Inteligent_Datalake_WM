@@ -57,11 +57,12 @@ generation_config = {
     "max_output_tokens": 8192,
 }
 
-with open('data-driven-cx-a52828490ded.json') as f:
-    service_account_info = json.load(f)
+import json
+service_account_info = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 project_id = 'data-driven-cx'
 client = bigquery.Client(credentials=credentials, project=project_id)
+
 
 # --- Session State ---
 if "messages" not in st.session_state:
