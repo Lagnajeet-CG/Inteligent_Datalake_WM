@@ -48,8 +48,7 @@ st.markdown("<h1 style='color:#2563eb; margin-bottom:0;'>Intelligent DataLake</h
 st.caption("Ask questions about your data. Get instant SQL and natural language answers.")
 
 # --- API & BigQuery Setup ---
-key = "AIzaSyCw2EGbX55HV5PcqVVjS2LV0nXi8awGEEQ"
-genai.configure(api_key=key)
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
@@ -57,12 +56,10 @@ generation_config = {
     "max_output_tokens": 8192,
 }
 
-import json
 service_account_info = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 project_id = 'data-driven-cx'
 client = bigquery.Client(credentials=credentials, project=project_id)
-
 
 # --- Session State ---
 if "messages" not in st.session_state:
@@ -156,6 +153,15 @@ if user_input:
             "results": data,
             "sql": cleaned_query
         })
+
+        # --- Conditional Chart Display ---
+        chart_keywords = ["graph", "chart", "bar chart", "plot", "visualize"]
+        if any(kw in user_input.lower() for kw in chart_keywords):
+            try:
+                st.markdown("### 📊 Data Visualization")
+                st.bar_chart(data)
+            except Exception as e:
+                st.warning("Unable to generate chart. Please check data format.")
 
     except Exception as e:
         st.error(f"Query execution error: {e}")
