@@ -177,7 +177,7 @@ Top 5 rows:
         st.error(f"Query error: {e}")
 
 # --- Conversation History ---
-st.markdown("## 💬 Inteligent Datalake")
+st.markdown("## 💬 GSIS")
 for msg in st.session_state.get("messages", []):
     with st.chat_message(msg["role"]):
         st.markdown(f"<div class='card'>{msg['content']}</div>", unsafe_allow_html=True)
